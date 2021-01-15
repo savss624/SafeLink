@@ -13,7 +13,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  var status = prefs.getString('saferX_email');
+  var status = prefs.getString('SafeLink_email');
   if (status != null) {
     email = status.toString();
   }

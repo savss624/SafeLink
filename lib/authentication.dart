@@ -99,8 +99,8 @@ class _AuthenticationState extends State<Authentication> {
                       .signInWithEmailAndPassword(
                           email: email, password: password);
                   final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('saferX_email');
-                  prefs.setString('saferX_email', email.toString());
+                  prefs.remove('SafeLink_email');
+                  prefs.setString('SafeLink_email', email.toString());
                   Fluttertoast.showToast(
                       msg: "Logging In",
                       toastLength: Toast.LENGTH_SHORT,
