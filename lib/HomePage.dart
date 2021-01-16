@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage>
                   : _bottomNavIndex == 2
                       ? LocationPage()
                       : _bottomNavIndex == 3
-                          ? ProfilePage()
+                          ? profile()
                           : Container(
                               color: Colors.pink,
                               child: Text('AN ERROR OCCURRED',
