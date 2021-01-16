@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomePage.dart';
+import 'Pages/One_on_One_Chat/database1.dart';
 
 String email = '';
 
@@ -131,8 +132,8 @@ class _AuthenticationState extends State<Authentication> {
                         loginData.name.substring(0, loginData.name.length - 10),
                     "userEmail": loginData.name,
                   };
-                  // DatabaseMethods databaseMethods = new DatabaseMethods();
-                  // databaseMethods.addUserInfo(userDataMap);
+                   DatabaseMethods databaseMethods = new DatabaseMethods();
+                   databaseMethods.addUserInfo(userDataMap);
                   Fluttertoast.showToast(
                       msg: "Registered",
                       toastLength: Toast.LENGTH_SHORT,

@@ -1,5 +1,5 @@
-import 'package:SafeLink/Pages/Chat.dart';
 import 'package:SafeLink/Pages/FeedPage.dart';
+import 'package:SafeLink/Pages/One_on_One_Chat/ChatRoom.dart';
 import 'package:SafeLink/Pages/assistant.dart';
 import 'package:SafeLink/Pages/location.dart';
 import 'package:SafeLink/Pages/profile.dart';
@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage>
           _bottomNavIndex == 0
               ? Feed()
               : _bottomNavIndex == 1
-                  ? ChatPage()
+                  ? ChatRoom()
                   : _bottomNavIndex == 2
                       ? LocationPage()
                       : _bottomNavIndex == 3
