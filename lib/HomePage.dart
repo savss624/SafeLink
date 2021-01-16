@@ -42,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-
   var bottomPadding = 0.0;
   var call = '';
   var task = '';
@@ -56,28 +55,27 @@ class _MyHomePageState extends State<MyHomePage>
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
   Future<Position> _getCurrentLocation() async {
-    geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best)
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
-          setState(() {
-            currentPosition = position;
-          });
+      setState(() {
+        currentPosition = position;
+      });
     }).catchError((e) {
       print(e);
     });
   }
 
   void protocols(String command) async {
-
-    if(command.toLowerCase().contains('help')) {
+    if (command.toLowerCase().contains('help')) {
       setState(() {
         FlutterOtp otp = FlutterOtp();
         otp.sendOtp(
-          '7525044512',
-          'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
-          1000,
-          6000,
-          '+91');
+            '7525044512',
+            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+            1000,
+            6000,
+            '+91');
         bottomPadding = 60;
         call = 'call';
         task = 'message';
@@ -91,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage>
       });
     }
 
-    if(command.toLowerCase().contains('call')) {
+    if (command.toLowerCase().contains('call')) {
       setState(() {
         bottomPadding = 60;
         call = 'call';
@@ -132,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     _service.startSpeechListenService;
     setState(() {
-      if(mounted) isListening = true;
+      if (mounted) isListening = true;
     });
 
     _service.getSpeechResults().onData((data) {
@@ -206,14 +204,14 @@ class _MyHomePageState extends State<MyHomePage>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if(task == 'message')
-                    Text(
-                      'sending location...',
-                      style: TextStyle(
-                        fontSize: call == 'call' ? 16 : 0,
+                    if (task == 'message')
+                      Text(
+                        'sending location...',
+                        style: TextStyle(
+                          fontSize: call == 'call' ? 16 : 0,
+                        ),
                       ),
-                    ),
-                    if(task == 'phone')
+                    if (task == 'phone')
                       Text(
                         'calling...',
                         style: TextStyle(
@@ -250,8 +248,7 @@ class _MyHomePageState extends State<MyHomePage>
           },
         ),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: iconList,
         backgroundColor: HexColor('ff8664'),
