@@ -15,7 +15,11 @@ import 'package:flutter/services.dart';
 import 'package:background_stt/background_stt.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:volume/volume.dart';
+import 'main.dart';
+import 'package:breathing_collection/breathing_collection.dart';
 
 class NavBar extends StatelessWidget {
   @override
@@ -42,9 +46,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
+
   var bottomPadding = 0.0;
   var call = '';
   var task = '';
+  var mode = '';
 
   Position currentPosition;
 
@@ -67,11 +73,46 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void protocols(String command) async {
-    if (command.toLowerCase().contains('help')) {
+    if(code=='' && (command.toLowerCase().contains('help') || command.toLowerCase().contains('call'))){
+      Fluttertoast.showToast(
+          msg: "Please Enter the Code",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 13.0);
+    }
+    else if(no1==''&&no2==''&&no3==''&&(command.toLowerCase().contains('help') || command.toLowerCase().contains('call'))) {
+      Fluttertoast.showToast(
+          msg: "Give atleast one contact number",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 13.0);
+    }
+    else if (command.toLowerCase().contains('help') && command.toLowerCase().contains(code)) {
       setState(() {
         FlutterOtp otp = FlutterOtp();
+        if(no1!='')
         otp.sendOtp(
-            '7525044512',
+            no1,
+            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+            1000,
+            6000,
+            '+91');
+        if(no2!='')
+        otp.sendOtp(
+            no2,
+            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+            1000,
+            6000,
+            '+91');
+        if(no3!='')
+        otp.sendOtp(
+            no3,
             'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
             1000,
             6000,
@@ -88,13 +129,22 @@ class _MyHomePageState extends State<MyHomePage>
         });
       });
     }
-
-    if (command.toLowerCase().contains('call')) {
+    else if(command.toLowerCase().contains('help')){
+      setState(() {
+        mode = 'heated';
+      });
+      Timer(Duration(seconds: 10), () {
+        setState(() {
+          mode = '';
+        });
+      });
+    }
+    else if (command.toLowerCase().contains('call') && command.toLowerCase().contains(code)) {
       setState(() {
         bottomPadding = 60;
         call = 'call';
         task = 'phone';
-        FlutterPhoneDirectCaller.callNumber('');
+        FlutterPhoneDirectCaller.callNumber(no1);
         Timer(Duration(seconds: 3), () {
           setState(() {
             bottomPadding = 0;
@@ -103,6 +153,44 @@ class _MyHomePageState extends State<MyHomePage>
           });
         });
       });
+    }
+    else if(command.toLowerCase().contains(code)){
+      if(mode == 'heated'){
+        setState(() {
+          FlutterOtp otp = FlutterOtp();
+          if(no1!='')
+            otp.sendOtp(
+                no1,
+                'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+                1000,
+                6000,
+                '+91');
+          if(no2!='')
+            otp.sendOtp(
+                no2,
+                'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+                1000,
+                6000,
+                '+91');
+          if(no3!='')
+            otp.sendOtp(
+                no3,
+                'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+                1000,
+                6000,
+                '+91');
+          bottomPadding = 60;
+          call = 'call';
+          task = 'message';
+          Timer(Duration(seconds: 3), () {
+            setState(() {
+              bottomPadding = 0;
+              call = '';
+              task = '';
+            });
+          });
+        });
+      }
     }
   }
 
@@ -166,8 +254,17 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     Timer.periodic(Duration(seconds: 20), (timer) {
       _getCurrentLocation();
+    });
+
+    Timer.periodic(Duration(seconds: 1), (timer) async {
+      await Volume.controlVolume(AudioManager.STREAM_MUSIC);
+      await Volume.setVol(15, showVolumeUI: ShowVolumeUI.HIDE);
+      await Volume.controlVolume(AudioManager.STREAM_RING);
+      await Volume.setVol(15, showVolumeUI: ShowVolumeUI.HIDE);
     });
 
     return Scaffold(
@@ -189,13 +286,13 @@ class _MyHomePageState extends State<MyHomePage>
                                   style: TextStyle(fontSize: 18)),
                             ),
           Padding(
-            padding: EdgeInsets.only(bottom: 96),
+            padding: EdgeInsets.only(bottom: h/7.687),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 10),
-                height: call == 'call' ? 40 : 0,
-                width: call == 'call' ? 125 : 0,
+                height: call == 'call' ? h/18.45 : 0,
+                width: call == 'call' ? w/2.4 : 0,
                 decoration: BoxDecoration(
                   color: call == 'call' ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -206,21 +303,21 @@ class _MyHomePageState extends State<MyHomePage>
                   children: [
                     if (task == 'message')
                       Text(
-                        'sending location...',
+                        '   sending location...   ',
                         style: TextStyle(
-                          fontSize: call == 'call' ? 16 : 0,
+                          fontSize: call == 'call' ? w/22.5 : 0,
                         ),
                       ),
                     if (task == 'phone')
                       Text(
-                        'calling...',
+                        '   calling...   ',
                         style: TextStyle(
-                          fontSize: call == 'call' ? 16 : 0,
+                          fontSize: call == 'call' ? w/22.5 : 0,
                         ),
                       ),
                     Container(
-                      height: call == 'call' ? 3 : 0,
-                      width: call == 'call' ? 3 : 0,
+                      height: call == 'call' ? h/246 : 0,
+                      width: call == 'call' ? w/120 : 0,
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -235,17 +332,11 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       floatingActionButton: ScaleTransition(
         scale: animation,
-        child: FloatingActionButton(
-          elevation: 8,
-          backgroundColor: HexColor('ff4965'),
-          child: IconButton(
-              icon: Icon(FlutterIcons.google_assistant_mco),
-              color: Colors.white,
-              onPressed: () {}),
-          onPressed: () {
-            _animationController.reset();
-            _animationController.forward();
-          },
+        child: BreathingGlowingButton(
+          icon: Icons.mic_none,
+          iconColor: Colors.white,
+          buttonBackgroundColor: Colors.pink,
+          glowColor: mode == 'heated' ? Color(0xffff8664) : Colors.transparent,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

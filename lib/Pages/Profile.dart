@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'package:SafeLink/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:saferx/Aboutdevs.dart';
 //import 'package:SafeLink/lib/authentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +15,7 @@ import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../authentication.dart';
 import 'assistant.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class profile extends StatefulWidget {
   @override
@@ -144,56 +149,64 @@ class _profileState extends State<profile> {
     setImage();
     super.initState();
   }
+  final RoundedLoadingButtonController _roundedLoadingButtonController = new RoundedLoadingButtonController();
+  String _code = code;
+  String _name1 = name1;
+  String _no1 = no1;
+  String _name2 = name2;
+  String _no2 = no2;
+  String _name3 = name3;
+  String _no3 = no3;
 
   @override
   Widget build(BuildContext context) {
-    resizeToAvoidBottomInset:
-    true;
+
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.green[50],
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Center(
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.width / 2 - 75,
-                            30,
-                            115,
-                            30),
-                        child: CircleAvatar(
-                          radius: 75.0,
-                          backgroundImage: CircleAvtarLink == null
-                              ? AssetImage('images/profile.png')
-                              : NetworkImage(CircleAvtarLink),
-                        ),
+                Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width / 2 - 75,
+                          30,
+                          115,
+                          30),
+                      child: CircleAvatar(
+                        radius: 75.0,
+                        backgroundImage: CircleAvtarLink == null
+                            ? AssetImage('images/profile.png')
+                            : NetworkImage(CircleAvtarLink),
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.width / 2 + 20,
-                            130,
-                            115,
-                            30),
-                        child: ButtonTheme(
-                          buttonColor: Colors.purple,
-                          minWidth: 20,
-                          height: 40,
-                          child: RaisedButton(
-                            onPressed: displayBottomSheet,
-                            child: Icon(Icons.camera_alt_outlined),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(100)),
-                            ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width / 2 + 20,
+                          130,
+                          115,
+                          30),
+                      child: ButtonTheme(
+                        buttonColor: Colors.purple,
+                        minWidth: 20,
+                        height: 40,
+                        child: RaisedButton(
+                          onPressed: displayBottomSheet,
+                          child: Icon(Icons.camera_alt_outlined),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(100)),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Text(
                   email,
@@ -222,58 +235,341 @@ class _profileState extends State<profile> {
                       )),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: h/36.9,
                 ),
-                Text('First Number'),
-                // TextFormField(
-                //     initialValue: first,
-                //     keyboardType: TextInputType.number,
-                //     onChanged: (String value) async {
-                //       final prefs = await SharedPreferences.getInstance();
-                //       prefs.setString('first_number', value);
-                //     }),
-                SizedBox(
-                  height: 20,
+                Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(18))
+                  ),
+                  child: Container(
+                    width: w/1.14,
+                    //height: 200,
+                    child: Padding(
+                      padding: EdgeInsets.all(w/22.5),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Important Info.',
+                                style: TextStyle(
+                                    color: Color(0xffff8664),
+                                    fontSize: w/20,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: h/92.25),
+                            Center(
+                              child: Text(
+                                'Code to trigger help me',
+                                style: TextStyle(
+                                    color: Color(0xffff8664),
+                                    fontSize: w/20
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: h/92.25),
+                            Center(
+                              child: Container(
+                                width: w/1.33,
+                                height: h/12.3,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.all(Radius.circular(18))
+                                ),
+                                child: Center(
+                                  child: Container(
+                                    width: w/1.5,
+                                    child: TextFormField(
+                                      initialValue: code,
+                                      cursorColor: Color(0xffff8664),
+                                      decoration: InputDecoration(
+                                          labelText: 'Code',
+                                          border: InputBorder.none
+                                      ),
+                                      onChanged: (String value) {
+                                        _code = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: h/123),
+                            Text(
+                                '1st Guardian',
+                                style: TextStyle(
+                                  color: Color(0xffff8664),
+                                  fontSize: w/20
+                                ),
+                            ),
+                            SizedBox(height: h/369),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        initialValue: name1,
+                                        cursorColor: Color(0xffff8664),
+                                        decoration: InputDecoration(
+                                          labelText: 'Name',
+                                          border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _name1 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: w/18,
+                                ),
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        initialValue: no1,
+                                        cursorColor: Color(0xffff8664),
+                                        decoration: InputDecoration(
+                                            labelText: 'Contact No.',
+                                            border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _no1 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: h/369),
+                            Text(
+                              '2nd Guardian',
+                              style: TextStyle(
+                                  color: Color(0xffff8664),
+                                  fontSize: w/20
+                              ),
+                            ),
+                            SizedBox(height: h/369),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        initialValue: name2,
+                                        cursorColor: Color(0xffff8664),
+                                        decoration: InputDecoration(
+                                            labelText: 'Name',
+                                            border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _name2 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: w/18,
+                                ),
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        cursorColor: Color(0xffff8664),
+                                        initialValue: no2,
+                                        decoration: InputDecoration(
+                                            labelText: 'Contact No.',
+                                            border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _no2 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: h/369),
+                            Text(
+                              '3rd Guardian',
+                              style: TextStyle(
+                                  color: Color(0xffff8664),
+                                  fontSize: w/20
+                              ),
+                            ),
+                            SizedBox(height: h/369),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        initialValue: name3,
+                                        cursorColor: Color(0xffff8664),
+                                        decoration: InputDecoration(
+                                            labelText: 'Name',
+                                            border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _name3 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: w/18,
+                                ),
+                                Container(
+                                  width: w/2.77,
+                                  height: h/12.3,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Color(0xffff8664), width: 2, style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(18))
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: w/3.6,
+                                      child: TextFormField(
+                                        cursorColor: Color(0xffff8664),
+                                        initialValue: no3,
+                                        decoration: InputDecoration(
+                                            labelText: 'Contact No.',
+                                            border: InputBorder.none
+                                        ),
+                                        onChanged: (String value) {
+                                          _no3 = value;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: h/46.125),
+                            Center(
+                              child: Container(
+                                width: w*.4,
+                                height: h*.05,
+                                child: RoundedLoadingButton(
+                                  controller: _roundedLoadingButtonController,
+                                  onPressed: () async {
+                                    Timer(Duration(seconds: 5), () {
+                                      _roundedLoadingButtonController.success();
+                                      _roundedLoadingButtonController.reset();
+                                      Fluttertoast.showToast(
+                                          msg: "Saved",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black54,
+                                          textColor: Colors.white,
+                                          fontSize: 13.0);
+                                    });
+                                    final prefs = await SharedPreferences.getInstance();
+                                    prefs.setString('code', _code);
+                                    prefs.setString('name1', _name1);
+                                    prefs.setString('no1', _no1);
+                                    prefs.setString('name2', _name2);
+                                    prefs.setString('no2', _no2);
+                                    prefs.setString('name3', _name3);
+                                    prefs.setString('no3', _no3);
+                                    code = _code;
+                                    name1 = _name1;
+                                    no1 = _no1;
+                                    name2 = _name2;
+                                    no2 = _no2;
+                                    name3 = _name3;
+                                    no3 = _no3;
+                                  },
+                                  successColor: Color(0xffff8664),
+                                  valueColor: Color(0xfffef8fa),
+                                  color: Color(0xffff8664),
+                                  child: Container(
+                                    width: w*.4,
+                                    height: h*.05,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [Color(0xffff8664), Color(0xffff4965)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(60),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Save',
+                                        style: TextStyle(
+                                            fontFamily: 'Overpass',
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xfffef8fa),
+                                            fontSize: w*.04
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Text('Second Number'),
-                // TextFormField(
-                //     initialValue: second,
-                //     keyboardType: TextInputType.number,
-                //     onChanged: (String value) async {
-                //       final prefs = await SharedPreferences.getInstance();
-                //       prefs.setString('second_number', value);
-                //     }),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Third Number'),
-                // TextFormField(
-                //     initialValue: third,
-                //     keyboardType: TextInputType.number,
-                //     onChanged: (String value) async {
-                //       final prefs = await SharedPreferences.getInstance();
-                //       prefs.setString('third_number', value);
-                //     }),
-                // Padding(
-                //   padding: const EdgeInsets.all(12.0),
-                //   child: RaisedButton(
-                //       color: Colors.purple,
-                //       child: Container(
-                //           height: 30,
-                //           width: 50,
-                //           child: Center(
-                //               child: Text('About',
-                //                   style: TextStyle(fontSize: 15)))),
-                //       onPressed: () {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => AboutDev()));
-                //       },
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.all(Radius.circular(10)),
-                //       )),
-                // ),
+                SizedBox(height: h/7.38),
               ],
             ),
           ),
