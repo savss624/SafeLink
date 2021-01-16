@@ -47,8 +47,7 @@ class _MyHomePageState extends State<MyHomePage>
   var call = '';
   var task = '';
 
-  var lat = 0.0;
-  var long = 0.0;
+  Position currentPosition;
 
   var _service = BackgroundStt();
   var result = '';
@@ -61,25 +60,21 @@ class _MyHomePageState extends State<MyHomePage>
       desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
           setState(() {
-            lat = position.latitude;
-            long = position.longitude;
-            /*Timer(Duration(seconds: 4), () {
-              print(position.longitude);
-            });*/
+            currentPosition = position;
           });
+    }).catchError((e) {
+      print(e);
     });
   }
 
   void protocols(String command) async {
-    setState(() {
-      _getCurrentLocation();
-    });
+
     if(command.toLowerCase().contains('help')) {
       setState(() {
         FlutterOtp otp = FlutterOtp();
         otp.sendOtp(
           '7525044512',
-          'https://www.google.com/maps/search/?api=1&query=${lat.toString()},${long.toString()}',
+          'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
           1000,
           6000,
           '+91');
@@ -173,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(Duration(seconds: 20), (timer) {
       _getCurrentLocation();
     });
 
