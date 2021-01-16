@@ -12,8 +12,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-int a = 0;
+import 'package:background_stt/background_stt.dart';
+import 'package:flutter_otp/flutter_otp.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:geolocator/geolocator.dart';
 
 class NavBar extends StatelessWidget {
   @override
@@ -40,6 +42,77 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
+
+  var bottomPadding = 0.0;
+  var call = '';
+  var task = '';
+
+  var lat = 0.0;
+  var long = 0.0;
+
+  var _service = BackgroundStt();
+  var result = '';
+  var isListening = false;
+
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+  Future<Position> _getCurrentLocation() async {
+    geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+          setState(() {
+            lat = position.latitude;
+            long = position.longitude;
+            /*Timer(Duration(seconds: 4), () {
+              print(position.longitude);
+            });*/
+          });
+    });
+  }
+
+  void protocols(String command) async {
+    setState(() {
+      _getCurrentLocation();
+    });
+    if(command.toLowerCase().contains('help')) {
+      setState(() {
+        FlutterOtp otp = FlutterOtp();
+        otp.sendOtp(
+          '7525044512',
+          'https://www.google.com/maps/search/?api=1&query=${lat.toString()},${long.toString()}',
+          1000,
+          6000,
+          '+91');
+        bottomPadding = 60;
+        call = 'call';
+        task = 'message';
+        Timer(Duration(seconds: 3), () {
+          setState(() {
+            bottomPadding = 0;
+            call = '';
+            task = '';
+          });
+        });
+      });
+    }
+
+    if(command.toLowerCase().contains('call')) {
+      setState(() {
+        bottomPadding = 60;
+        call = 'call';
+        task = 'phone';
+        FlutterPhoneDirectCaller.callNumber('');
+        Timer(Duration(seconds: 3), () {
+          setState(() {
+            bottomPadding = 0;
+            call = '';
+            task = '';
+          });
+        });
+      });
+    }
+  }
+
   var _bottomNavIndex = 0; //default index of first screen
   AnimationController _animationController;
   Animation<double> animation;
@@ -52,19 +125,28 @@ class _MyHomePageState extends State<MyHomePage>
     FlutterIcons.face_profile_mco,
   ];
 
-  final defaultTheme = SystemUiOverlayStyle.light.copyWith(
-    systemNavigationBarColor: Colors.black,
-    systemNavigationBarIconBrightness: Brightness.light,
-  );
-
   @override
   void initState() {
+    _getCurrentLocation();
     super.initState();
     final systemTheme = SystemUiOverlayStyle.light.copyWith(
       systemNavigationBarColor: HexColor('ff8664'),
       systemNavigationBarIconBrightness: Brightness.light,
     );
     SystemChrome.setSystemUIOverlayStyle(systemTheme);
+
+    _service.startSpeechListenService;
+    setState(() {
+      if(mounted) isListening = true;
+    });
+
+    _service.getSpeechResults().onData((data) {
+      protocols(data.result);
+      print(data.result);
+      setState(() {
+        result = data.result;
+      });
+    });
 
     _animationController = AnimationController(
       duration: Duration(seconds: 1),
@@ -91,69 +173,105 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AssistantPage(),
-        if (a == 0)
-          Scaffold(
-            extendBody: true,
-            resizeToAvoidBottomInset: false,
-            body: Stack(
-              children: <Widget>[
-                _bottomNavIndex == 0
-                    ? Feed()
-                    : _bottomNavIndex == 1
-                        ? ChatPage()
-                        : _bottomNavIndex == 2
-                            ? LocationPage()
-                            : _bottomNavIndex == 3
-                                ? ProfilePage()
-                                : Container(
-                                    color: Colors.pink,
-                                    child: Text('AN ERROR OCCURRED',
-                                        style: TextStyle(fontSize: 18)),
-                                  ),
-              ],
-            ),
-            floatingActionButton: ScaleTransition(
-              scale: animation,
-              child: FloatingActionButton(
-                elevation: 8,
-                backgroundColor: HexColor('ff4965'),
-                child: IconButton(
-                    icon: Icon(FlutterIcons.google_assistant_mco),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        a = 1;
-                        SystemChrome.setSystemUIOverlayStyle(defaultTheme);
-                      });
-                    }),
-                onPressed: () {
-                  _animationController.reset();
-                  _animationController.forward();
-                },
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      _getCurrentLocation();
+    });
+
+    return Scaffold(
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: <Widget>[
+          _bottomNavIndex == 0
+              ? Feed()
+              : _bottomNavIndex == 1
+                  ? ChatPage()
+                  : _bottomNavIndex == 2
+                      ? LocationPage()
+                      : _bottomNavIndex == 3
+                          ? ProfilePage()
+                          : Container(
+                              color: Colors.pink,
+                              child: Text('AN ERROR OCCURRED',
+                                  style: TextStyle(fontSize: 18)),
+                            ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 96),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 10),
+                height: call == 'call' ? 40 : 0,
+                width: call == 'call' ? 125 : 0,
+                decoration: BoxDecoration(
+                  color: call == 'call' ? Colors.white : Colors.transparent,
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if(task == 'message')
+                    Text(
+                      'sending location...',
+                      style: TextStyle(
+                        fontSize: call == 'call' ? 16 : 0,
+                      ),
+                    ),
+                    if(task == 'phone')
+                      Text(
+                        'calling...',
+                        style: TextStyle(
+                          fontSize: call == 'call' ? 16 : 0,
+                        ),
+                      ),
+                    Container(
+                      height: call == 'call' ? 3 : 0,
+                      width: call == 'call' ? 3 : 0,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: AnimatedBottomNavigationBar(
-              icons: iconList,
-              backgroundColor: HexColor('ff8664'),
-              activeIndex: _bottomNavIndex,
-              activeColor: HexColor('ff4965'),
-              splashColor: HexColor('ff4965'),
-              inactiveColor: Colors.white,
-              notchAndCornersAnimation: animation,
-              splashSpeedInMilliseconds: 300,
-              notchSmoothness: NotchSmoothness.defaultEdge,
-              gapLocation: GapLocation.center,
-              leftCornerRadius: 32,
-              rightCornerRadius: 32,
-              onTap: (index) => setState(() => _bottomNavIndex = index),
-            ),
-          ),
-      ],
+          )
+        ],
+      ),
+      floatingActionButton: ScaleTransition(
+        scale: animation,
+        child: FloatingActionButton(
+          elevation: 8,
+          backgroundColor: HexColor('ff4965'),
+          child: IconButton(
+              icon: Icon(FlutterIcons.google_assistant_mco),
+              color: Colors.white,
+              onPressed: () {}),
+          onPressed: () {
+            _animationController.reset();
+            _animationController.forward();
+          },
+        ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: iconList,
+        backgroundColor: HexColor('ff8664'),
+        activeIndex: _bottomNavIndex,
+        activeColor: HexColor('ff4965'),
+        splashColor: HexColor('ff4965'),
+        inactiveColor: Colors.white,
+        notchAndCornersAnimation: animation,
+        splashSpeedInMilliseconds: 300,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        gapLocation: GapLocation.center,
+        leftCornerRadius: 32,
+        rightCornerRadius: 32,
+        onTap: (index) => setState(() => _bottomNavIndex = index),
+      ),
     );
   }
 }

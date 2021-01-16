@@ -18,7 +18,7 @@ Future main() async {
     email = status.toString();
   }
   final systemTheme = SystemUiOverlayStyle.light.copyWith(
-    systemNavigationBarColor: Colors.purple,
+    systemNavigationBarColor: Colors.pink,
     systemNavigationBarIconBrightness: Brightness.light,
   );
   SystemChrome.setSystemUIOverlayStyle(systemTheme);

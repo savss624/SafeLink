@@ -33,6 +33,10 @@ dependencies:
   flutter_icons: ^1.1.0
   circular_reveal_animation: ^1.1.5
   animated_bottom_navigation_bar: ^0.1.2+2
+  background_stt: ^1.0.5
+  flutter_otp: ^0.3.2
+  geolocator: ^5.3.1
+  flutter_phone_direct_caller: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
