@@ -9,6 +9,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomePage.dart';
 import 'Pages/One_on_One_Chat/database1.dart';
+import 'main.dart';
 
 String email = '';
 
@@ -113,6 +114,20 @@ class _AuthenticationState extends State<Authentication> {
                   // Navigator.of(context).pushAndRemoveUntil(
                   //     MaterialPageRoute(builder: (context) => NavBar()),
                   //     (Route<dynamic> route) => false);
+                  prefs.setString('code', '');
+                  prefs.setString('name1', '');
+                  prefs.setString('no1', '');
+                  prefs.setString('name2', '');
+                  prefs.setString('no2', '');
+                  prefs.setString('name3', '');
+                  prefs.setString('no3', '');
+                  code ='';
+                  name1 = '';
+                  no1 = '';
+                  name2 = '';
+                  no2 = '';
+                  name3 = '';
+                  no3 = '';
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => NavBar()));
                 } catch (e) {

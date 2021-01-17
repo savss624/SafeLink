@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:SafeLink/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -78,6 +80,20 @@ class _LocationState extends State<location> {
 
   @override
   Widget build(BuildContext context) {
+
+    Timer.periodic(Duration(seconds: 4), (timer) async {
+      if(!await geolocator.isLocationServiceEnabled()){
+        Fluttertoast.showToast(
+            msg: "Please Enable System GPS",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 13.0);
+      }
+    });
+
     return MaterialApp(
       home: Scaffold(
         key: _scaffoldKey,

@@ -1,5 +1,4 @@
 import 'package:hexcolor/hexcolor.dart';
-
 import 'Getinfo.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -34,7 +33,7 @@ class _FeedState extends State<Feed> {
       appBar: AppBar(
         title: Center(child: Text('Feed')),
         leading: null,
-        backgroundColor: HexColor('ff8864'),
+        backgroundColor: Colors.pink,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(16),

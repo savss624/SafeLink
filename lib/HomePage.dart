@@ -1,7 +1,6 @@
 import 'package:SafeLink/Pages/FeedPage.dart';
 import 'package:SafeLink/Pages/Location.dart';
 import 'package:SafeLink/Pages/One_on_One_Chat/ChatRoom.dart';
-import 'package:SafeLink/Pages/assistant.dart';
 import 'package:SafeLink/Pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -10,7 +9,6 @@ import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:background_stt/background_stt.dart';
 import 'package:flutter_otp/flutter_otp.dart';
@@ -72,7 +70,17 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void protocols(String command) async {
-    if (code == '' &&
+    if(!await geolocator.isLocationServiceEnabled() && command.toLowerCase().contains('help')){
+      Fluttertoast.showToast(
+          msg: "Please Enable System GPS",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 13.0);
+    }
+    else if (code == '' &&
         (command.toLowerCase().contains('help') ||
             command.toLowerCase().contains('call'))) {
       Fluttertoast.showToast(
@@ -159,6 +167,16 @@ class _MyHomePageState extends State<MyHomePage>
     } else if (command.toLowerCase().contains(code)) {
       if (mode == 'heated') {
         setState(() {
+          bottomPadding = 60;
+          call = 'call';
+          task = 'message';
+          Timer(Duration(seconds: 3), () {
+            setState(() {
+              bottomPadding = 0;
+              call = '';
+              task = '';
+            });
+          });
           FlutterOtp otp = FlutterOtp();
           if (no1 != '')
             otp.sendOtp(
@@ -181,16 +199,6 @@ class _MyHomePageState extends State<MyHomePage>
                 1000,
                 6000,
                 '+91');
-          bottomPadding = 60;
-          call = 'call';
-          task = 'message';
-          Timer(Duration(seconds: 3), () {
-            setState(() {
-              bottomPadding = 0;
-              call = '';
-              task = '';
-            });
-          });
         });
       }
     }

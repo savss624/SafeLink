@@ -3,8 +3,6 @@ import 'package:SafeLink/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:saferx/Aboutdevs.dart';
-//import 'package:SafeLink/lib/authentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +12,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../authentication.dart';
-import 'assistant.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class profile extends StatefulWidget {
@@ -193,7 +190,7 @@ class _profileState extends State<profile> {
                           115,
                           30),
                       child: ButtonTheme(
-                        buttonColor: Colors.purple,
+                        buttonColor: Colors.pink,
                         minWidth: 20,
                         height: 40,
                         child: RaisedButton(
@@ -215,7 +212,7 @@ class _profileState extends State<profile> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RaisedButton(
-                      color: Colors.purple,
+                      color: Colors.pink,
                       child: Container(
                           height: 30,
                           width: 60,
