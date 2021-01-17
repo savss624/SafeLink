@@ -1,7 +1,7 @@
 import 'package:SafeLink/Pages/FeedPage.dart';
+import 'package:SafeLink/Pages/Location.dart';
 import 'package:SafeLink/Pages/One_on_One_Chat/ChatRoom.dart';
 import 'package:SafeLink/Pages/assistant.dart';
-import 'package:SafeLink/Pages/location.dart';
 import 'package:SafeLink/Pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -46,7 +46,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-
   var bottomPadding = 0.0;
   var call = '';
   var task = '';
@@ -73,7 +72,9 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void protocols(String command) async {
-    if(code=='' && (command.toLowerCase().contains('help') || command.toLowerCase().contains('call'))){
+    if (code == '' &&
+        (command.toLowerCase().contains('help') ||
+            command.toLowerCase().contains('call'))) {
       Fluttertoast.showToast(
           msg: "Please Enter the Code",
           toastLength: Toast.LENGTH_SHORT,
@@ -82,8 +83,11 @@ class _MyHomePageState extends State<MyHomePage>
           backgroundColor: Colors.black54,
           textColor: Colors.white,
           fontSize: 13.0);
-    }
-    else if(no1==''&&no2==''&&no3==''&&(command.toLowerCase().contains('help') || command.toLowerCase().contains('call'))) {
+    } else if (no1 == '' &&
+        no2 == '' &&
+        no3 == '' &&
+        (command.toLowerCase().contains('help') ||
+            command.toLowerCase().contains('call'))) {
       Fluttertoast.showToast(
           msg: "Give atleast one contact number",
           toastLength: Toast.LENGTH_SHORT,
@@ -92,31 +96,31 @@ class _MyHomePageState extends State<MyHomePage>
           backgroundColor: Colors.black54,
           textColor: Colors.white,
           fontSize: 13.0);
-    }
-    else if (command.toLowerCase().contains('help') && command.toLowerCase().contains(code)) {
+    } else if (command.toLowerCase().contains('help') &&
+        command.toLowerCase().contains(code)) {
       setState(() {
         FlutterOtp otp = FlutterOtp();
-        if(no1!='')
-        otp.sendOtp(
-            no1,
-            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
-            1000,
-            6000,
-            '+91');
-        if(no2!='')
-        otp.sendOtp(
-            no2,
-            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
-            1000,
-            6000,
-            '+91');
-        if(no3!='')
-        otp.sendOtp(
-            no3,
-            'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
-            1000,
-            6000,
-            '+91');
+        if (no1 != '')
+          otp.sendOtp(
+              no1,
+              'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+              1000,
+              6000,
+              '+91');
+        if (no2 != '')
+          otp.sendOtp(
+              no2,
+              'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+              1000,
+              6000,
+              '+91');
+        if (no3 != '')
+          otp.sendOtp(
+              no3,
+              'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
+              1000,
+              6000,
+              '+91');
         bottomPadding = 60;
         call = 'call';
         task = 'message';
@@ -128,8 +132,7 @@ class _MyHomePageState extends State<MyHomePage>
           });
         });
       });
-    }
-    else if(command.toLowerCase().contains('help')){
+    } else if (command.toLowerCase().contains('help')) {
       setState(() {
         mode = 'heated';
       });
@@ -138,8 +141,8 @@ class _MyHomePageState extends State<MyHomePage>
           mode = '';
         });
       });
-    }
-    else if (command.toLowerCase().contains('call') && command.toLowerCase().contains(code)) {
+    } else if (command.toLowerCase().contains('call') &&
+        command.toLowerCase().contains(code)) {
       setState(() {
         bottomPadding = 60;
         call = 'call';
@@ -153,26 +156,25 @@ class _MyHomePageState extends State<MyHomePage>
           });
         });
       });
-    }
-    else if(command.toLowerCase().contains(code)){
-      if(mode == 'heated'){
+    } else if (command.toLowerCase().contains(code)) {
+      if (mode == 'heated') {
         setState(() {
           FlutterOtp otp = FlutterOtp();
-          if(no1!='')
+          if (no1 != '')
             otp.sendOtp(
                 no1,
                 'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
                 1000,
                 6000,
                 '+91');
-          if(no2!='')
+          if (no2 != '')
             otp.sendOtp(
                 no2,
                 'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
                 1000,
                 6000,
                 '+91');
-          if(no3!='')
+          if (no3 != '')
             otp.sendOtp(
                 no3,
                 'https://www.google.com/maps/search/?api=1&query=${currentPosition.latitude.toString()},${currentPosition.longitude.toString()}',
@@ -277,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage>
               : _bottomNavIndex == 1
                   ? ChatRoom()
                   : _bottomNavIndex == 2
-                      ? LocationPage()
+                      ? location()
                       : _bottomNavIndex == 3
                           ? profile()
                           : Container(
@@ -286,13 +288,13 @@ class _MyHomePageState extends State<MyHomePage>
                                   style: TextStyle(fontSize: 18)),
                             ),
           Padding(
-            padding: EdgeInsets.only(bottom: h/7.687),
+            padding: EdgeInsets.only(bottom: h / 7.687),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 10),
-                height: call == 'call' ? h/18.45 : 0,
-                width: call == 'call' ? w/2.4 : 0,
+                height: call == 'call' ? h / 18.45 : 0,
+                width: call == 'call' ? w / 2.4 : 0,
                 decoration: BoxDecoration(
                   color: call == 'call' ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -305,19 +307,19 @@ class _MyHomePageState extends State<MyHomePage>
                       Text(
                         '   sending location...   ',
                         style: TextStyle(
-                          fontSize: call == 'call' ? w/22.5 : 0,
+                          fontSize: call == 'call' ? w / 22.5 : 0,
                         ),
                       ),
                     if (task == 'phone')
                       Text(
                         '   calling...   ',
                         style: TextStyle(
-                          fontSize: call == 'call' ? w/22.5 : 0,
+                          fontSize: call == 'call' ? w / 22.5 : 0,
                         ),
                       ),
                     Container(
-                      height: call == 'call' ? h/246 : 0,
-                      width: call == 'call' ? w/120 : 0,
+                      height: call == 'call' ? h / 246 : 0,
+                      width: call == 'call' ? w / 120 : 0,
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.all(Radius.circular(18)),
