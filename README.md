@@ -4,8 +4,6 @@
 
 Everyone knows that Women feel unsafe in travelling alone at night , working late hours etc. This situation is there because of all the news we here involving women. This application will help change the outlook of the condition of India. Our teams basic goal is to provide a safer place for everyone to stay in and hope to achieve with this application.
 
-
-
 Introducing **SafeLink**
 
 It is an android mobile application based in flutter which will ensure Women Safety and Security in India.
@@ -28,13 +26,16 @@ This is an all round application that will greatly have an influence in all the 
 1. Easy Sign up and Login with your email and password - powered by **Google Realtime Firebase**.
 
 <p float="left">
-<img src = "LoginPage.jpeg" height=300>
+<img src = "Login.jpeg" height=300>
 </p>
 
 2. Determining whether a place is safe or not depending on the data taken from government site about that area.
- <img src = "location.jpeg" height=300> 
+ <p float="left">
+<img src = "Safety1.jpeg" height=300            > 
+<img src = "Safety.jpeg" height=300            > 
+</p>
 3. Have one on one encrypted chat system for communication with the concerned authorities.
- <img src = "chat.jpeg" height=300> 
+ <img src = "Chat.jpeg" height=300> 
 4. Live feed will involve work in database of uploading and seeing data about women empowerment.
  <p float="left">
 <img src = "Feed.jpeg" height=300            > 
@@ -42,15 +43,14 @@ This is an all round application that will greatly have an influence in all the 
 </p>
 5. Help me voice integration where your current location will be sent to the concerned nearby authorities (works even in background mode or locked mode).
  <p float="left">
-<img src = "Helpme.jpeg" height=300            > 
-
+<img src = "Message.jpeg" height=300            > 
 </p>
 
 6. AI chatbot that speaks to you when u ask them basic questions ,also works in background mode. 
  <img src = "Assisstant.jpeg" height=300> 
  
  7. A Profile Page showing your details and consist of Textfield to register the numbers for help me feature.
- <img src = "ProfilePage.jpeg" height=300>
+ <img src = "Profile.jpeg" height=300>
 
 
 **Developers :-**
