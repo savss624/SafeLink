@@ -10,7 +10,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../authentication.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -37,7 +36,7 @@ class _profileState extends State<profile> {
 
   Future<StorageUploadTask> uploadFile(BuildContext context) async {
     String fileName = path.basename(_image.path);
-    StorageReference ref = firebase_storage.FirebaseStorage.instance
+    StorageReference ref = FirebaseStorage.instance
         .ref()
         .child(email.substring(0, email.indexOf('@')))
         .child(fileName);
