@@ -5,7 +5,11 @@
 
 Everyone knows that Women or anyone in fact feel unsafe in travelling alone at night , working late hours etc. This application will help change the outlook of the condition of India. Our team's basic goal is to provide a safer place for everyone to stay in and we hope to achieve that with this application.
 
-Introducing **SafeLink**
+##  Introducing **SafeLink**
+
+   <p float="left">
+   <img src = "AppIcon.jpeg" height=150            > 
+   </p>
 
 It is an android mobile application based in flutter which will ensure Women Safety or infact Safety of any person and Security in India.
 This application will be aimed at provided instant help to women in need and also provide longterm education
